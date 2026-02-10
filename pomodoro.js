@@ -377,48 +377,44 @@ function showSectionFlashcards(sectionIndex) {
       
       <div class="flashcards-grid" id="flashcardsGrid">
         ${questions.map((q, i) => `
-          <div class="flashcard-modern" onclick="flipFlashcard(this)">
-            <div class="flashcard-inner">
-              <div class="flashcard-front">
-                <div class="flashcard-header">
-                  <span class="card-number">${i + 1}</span>
-                  <span class="card-tag">Study</span>
+          <div class="pomodoro-flashcard" onclick="flipFlashcard(this)">
+            <div class="pomodoro-flashcard-inner">
+              <div class="pomodoro-flashcard-front">
+                <div class="pomodoro-flashcard-header">
+                  <span class="pomodoro-card-number">${i + 1}</span>
+                  <span class="pomodoro-card-tag">Study</span>
                 </div>
-                <div class="card-content">
-                  <p class="card-question">${q.question}</p>
-                  <div class="card-options">
+                <div class="pomodoro-card-content">
+                  <p class="pomodoro-card-question">${q.question}</p>
+                  <div class="pomodoro-card-options">
                     ${q.options.map((opt, idx) => `
-                      <div class="card-option ${idx === q.correctIndex ? 'correct-option' : ''}">
-                        <span class="option-letter">${String.fromCharCode(65 + idx)}</span>
-                        <span class="option-text">${opt}</span>
+                      <div class="pomodoro-card-option ${idx === q.correctIndex ? 'correct-option' : ''}">
+                        <span class="pomodoro-option-letter">${String.fromCharCode(65 + idx)}</span>
+                        <span class="pomodoro-option-text">${opt}</span>
                       </div>
                     `).join('')}
                   </div>
                 </div>
-                <div class="card-footer">
-                  <span class="hint-text">Click to reveal answer</span>
-                </div>
+               
               </div>
-              <div class="flashcard-back">
-                <div class="flashcard-header">
-                  <span class="card-number">${i + 1}</span>
-                  <span class="card-tag correct">Correct Answer</span>
+              <div class="pomodoro-flashcard-back">
+                <div class="pomodoro-flashcard-header">
+                  <span class="pomodoro-card-number">${i + 1}</span>
+                  <span class="pomodoro-card-tag correct">Correct Answer</span>
                 </div>
-                <div class="card-content">
-                  <div class="answer-highlight">
-                    <span class="answer-label">✅ Correct Answer:</span>
-                    <span class="answer-text">${q.options[q.correctIndex]}</span>
+                <div class="pomodoro-card-content">
+                  <div class="pomodoro-answer-highlight">
+                    <span class="pomodoro-answer-label">✅ Correct Answer:</span>
+                    <span class="pomodoro-answer-text">${q.options[q.correctIndex]}</span>
                   </div>
                   ${q.explanation ? `
-                    <div class="explanation-box">
-                      <span class="explanation-label">💡 Explanation:</span>
-                      <p class="explanation-text">${q.explanation}</p>
+                    <div class="pomodoro-explanation-box">
+                      <span class="pomodoro-explanation-label">💡 Explanation:</span>
+                      <p class="pomodoro-explanation-text">${q.explanation}</p>
                     </div>
                   ` : ''}
                 </div>
-                <div class="card-footer">
-                  <button class="small-btn" onclick="markAsLearned(event, this)">✓ Mark as Learned</button>
-                </div>
+                
               </div>
             </div>
           </div>
@@ -442,20 +438,17 @@ function showSectionFlashcards(sectionIndex) {
 }
 
 // Flip flashcard function
+// Flip flashcard function for Pomodoro
 function flipFlashcard(cardElement) {
-  const inner = cardElement.querySelector('.flashcard-inner');
-  inner.classList.toggle('flipped');
-  
-  // Remove learned class when flipping
-  cardElement.classList.remove('learned');
+  cardElement.classList.toggle('flipped');
 }
 
-// Mark as learned function
+// Mark as learned function for Pomodoro
 function markAsLearned(event, buttonElement) {
   event.stopPropagation();
   
-  const card = buttonElement.closest('.flashcard-modern');
-  const cardTag = card.querySelector('.card-tag.correct');
+  const card = buttonElement.closest('.pomodoro-flashcard');
+  const cardTag = card.querySelector('.pomodoro-card-tag.correct');
   
   if (cardTag) {
     cardTag.textContent = '✓ Learned';
@@ -464,14 +457,7 @@ function markAsLearned(event, buttonElement) {
 }
 
 
-function markAsLearned(event, index) {
-  event.stopPropagation();
-  const card = document.getElementById(`flashcard-${index}`);
-  if (card) {
-    card.classList.add('learned');
-    card.querySelector('.card-tag.correct').textContent = '✓ Learned';
-  }
-}
+
 
 // ────────────────────────────────────────────────
 // 4. Quiz Phase - Modern Quiz Interface
