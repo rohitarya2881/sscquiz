@@ -528,17 +528,17 @@ function playCelebrationSound() {
 
 
 
-// Restart the quiz
-function restartQuiz() {
-  currentQuestionIndex = 0;
-  score = 0;
-  incorrectQuestions = [];
-  document.getElementById("quizContainer").innerHTML = `
-    <h2 id="question-text">Question will appear here</h2>
-    <div id="options"></div>
-  `;
-  startQuiz(quizMode);
-}
+// Restart the quiz commented
+// function restartQuiz() {
+//   currentQuestionIndex = 0;
+//   score = 0;
+//   incorrectQuestions = [];
+//   document.getElementById("quizContainer").innerHTML = `
+//     <h2 id="question-text">Question will appear here</h2>
+//     <div id="options"></div>
+//   `;
+//   startQuiz(quizMode);
+// }
 function handleVisibilityChange() {
   if (document.hidden) {
     stopFlashcardTimer();
@@ -1433,69 +1433,69 @@ async function startQuiz(mode) {
 //     optionsContainer.appendChild(button);
 //   });
 // }
+// Commented
 
+// function loadQuestion() {
+//   if (currentQuestionIndex >= currentQuiz.length) {
+//     if (quizTimer) clearInterval(quizTimer);
+//     showResults();
+//     return;
+//   }
 
-function loadQuestion() {
-  if (currentQuestionIndex >= currentQuiz.length) {
-    if (quizTimer) clearInterval(quizTimer);
-    showResults();
-    return;
-  }
+//   const questionData = currentQuiz[currentQuestionIndex];
 
-  const questionData = currentQuiz[currentQuestionIndex];
+//   // Update progress
+//   document.getElementById("current-question").textContent = currentQuestionIndex + 1;
+//   document.getElementById("total-questions").textContent = currentQuiz.length;
 
-  // Update progress
-  document.getElementById("current-question").textContent = currentQuestionIndex + 1;
-  document.getElementById("total-questions").textContent = currentQuiz.length;
+//   // Show question text
+//   document.getElementById("question-text").textContent = questionData.question;
 
-  // Show question text
-  document.getElementById("question-text").textContent = questionData.question;
+//   // Optional: show small notice that options were shuffled
+//   const shuffleNotice = document.getElementById("shuffle-notice");
+//   if (shuffleNotice) {
+//     // You can make this always visible, or random, or only first few questions...
+//     shuffleNotice.style.display = "inline";
+//     // Alternative (random ~60% of questions):
+//     // shuffleNotice.style.display = Math.random() < 0.6 ? "inline" : "none";
+//   }
 
-  // Optional: show small notice that options were shuffled
-  const shuffleNotice = document.getElementById("shuffle-notice");
-  if (shuffleNotice) {
-    // You can make this always visible, or random, or only first few questions...
-    shuffleNotice.style.display = "inline";
-    // Alternative (random ~60% of questions):
-    // shuffleNotice.style.display = Math.random() < 0.6 ? "inline" : "none";
-  }
+//   // Clear previous options
+//   const optionsContainer = document.getElementById("options");
+//   optionsContainer.innerHTML = "";
 
-  // Clear previous options
-  const optionsContainer = document.getElementById("options");
-  optionsContainer.innerHTML = "";
+//   // Create option buttons
+//   questionData.options.forEach((optionText, index) => {
+//     const button = document.createElement("button");
+//     button.classList.add("option-btn");
+//     button.textContent = `${String.fromCharCode(65 + index)}. ${optionText}`; // A. B. C. D. style
+//     button.dataset.index = index; // helpful for debugging / styling
 
-  // Create option buttons
-  questionData.options.forEach((optionText, index) => {
-    const button = document.createElement("button");
-    button.classList.add("option-btn");
-    button.textContent = `${String.fromCharCode(65 + index)}. ${optionText}`; // A. B. C. D. style
-    button.dataset.index = index; // helpful for debugging / styling
+//     button.addEventListener("click", () => {
+//       // Optional: visual feedback immediately
+//       optionsContainer.querySelectorAll(".option-btn").forEach(btn => {
+//         btn.disabled = true;                    // prevent multiple clicks
+//         btn.style.opacity = "0.7";              // slight dim
+//       });
 
-    button.addEventListener("click", () => {
-      // Optional: visual feedback immediately
-      optionsContainer.querySelectorAll(".option-btn").forEach(btn => {
-        btn.disabled = true;                    // prevent multiple clicks
-        btn.style.opacity = "0.7";              // slight dim
-      });
+//       // Highlight selected one temporarily
+//       button.style.backgroundColor = "#3498db";
+//       button.style.color = "white";
 
-      // Highlight selected one temporarily
-      button.style.backgroundColor = "#3498db";
-      button.style.color = "white";
+//       // Small delay → gives user visual feedback before next question
+//       setTimeout(() => {
+//         selectAnswer(index);
+//       }, 400); // 400ms delay – feels more responsive than instant
+//     });
 
-      // Small delay → gives user visual feedback before next question
-      setTimeout(() => {
-        selectAnswer(index);
-      }, 400); // 400ms delay – feels more responsive than instant
-    });
+//     optionsContainer.appendChild(button);
+//   });
 
-    optionsContainer.appendChild(button);
-  });
-
-  // Optional: scroll question into view on mobile
-  if (window.innerWidth < 768) {
-    document.getElementById("question-text").scrollIntoView({ behavior: "smooth", block: "start" });
-  }
-}
+//   // Optional: scroll question into view on mobile
+//   if (window.innerWidth < 768) {
+//     document.getElementById("question-text").scrollIntoView({ behavior: "smooth", block: "start" });
+//   }
+// }
 // Emergency home function
 // Helper - safely clear known timers only
 function clearKnownTimers() {
@@ -1593,6 +1593,8 @@ function endRapidRoundAndCleanup() {
     console.log("Rapid Round ended and cleaned up.");
 }
 function goHome() {
+      markedDifficultQuestions = [];
+
   if (pomodoroState.active) {
     pomodoroState.active = false;
     clearPomodoroTimer();
@@ -1669,6 +1671,7 @@ function goHome() {
 
   // Update folder list if needed
   updateFolderList();
+
 }
 function forceGoHome() {
     console.warn("forceGoHome() used — this should be avoided");
