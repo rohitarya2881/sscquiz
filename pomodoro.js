@@ -1,12 +1,12 @@
 
-let pomodoroSettings = {
-  questionsPerSection: 15,
-  studyTimeMinutes: 25,
-  quizTimeMinutes: 20,
-  breakTimeMinutes: 5,
-  autoAdvance: true,
-  showProgressBar: true
-};
+// let pomodoroSettings = {
+//   questionsPerSection: 15,
+//   studyTimeMinutes: 25,
+//   quizTimeMinutes: 20,
+//   breakTimeMinutes: 5,
+//   autoAdvance: true,
+//   showProgressBar: true
+// };
 
 let pomodoroState = {
   active: false,
@@ -24,125 +24,125 @@ let pomodoroState = {
 // ────────────────────────────────────────────────
 // 1. Modern Settings Modal
 // ────────────────────────────────────────────────
-function startPomodoroSetup() {
-  if (!currentFolder || !quizzes[currentFolder]?.length) {
-    alert("Select a folder with questions first!");
-    return;
-  }
+// function startPomodoroSetup() {
+//   if (!currentFolder || !quizzes[currentFolder]?.length) {
+//     alert("Select a folder with questions first!");
+//     return;
+//   }
 
-  // Close menu if open
-  if (document.getElementById('mobile-menu')?.classList.contains('show')) {
-    toggleMenu();
-  }
+//   // Close menu if open
+//   if (document.getElementById('mobile-menu')?.classList.contains('show')) {
+//     toggleMenu();
+//   }
 
-  const modal = document.createElement('div');
-  modal.className = 'pomodoro-modal modern-modal';
-  modal.innerHTML = `
-    <div class="pomodoro-dialog modern-dialog">
-      <div class="modal-header">
-        <h3>🚀 Pomodoro Flow</h3>
-        <p class="modal-subtitle">Continuous Learning with Smart Breaks</p>
-      </div>
+//   const modal = document.createElement('div');
+//   modal.className = 'pomodoro-modal modern-modal';
+//   modal.innerHTML = `
+//     <div class="pomodoro-dialog modern-dialog">
+//       <div class="modal-header">
+//         <h3>🚀 Pomodoro Flow</h3>
+//         <p class="modal-subtitle">Continuous Learning with Smart Breaks</p>
+//       </div>
       
-      <div class="modal-body">
-        <div class="stats-summary">
-          <div class="stat-card">
-            <span class="stat-icon">📚</span>
-            <span class="stat-value">${quizzes[currentFolder].length}</span>
-            <span class="stat-label">Total Questions</span>
-          </div>
-          <div class="stat-card">
-            <span class="stat-icon">📊</span>
-            <span class="stat-value" id="estimatedSections">0</span>
-            <span class="stat-label">Sections</span>
-          </div>
-          <div class="stat-card">
-            <span class="stat-icon">⏱️</span>
-            <span class="stat-value" id="totalTimeEstimate">0 min</span>
-            <span class="stat-label">Total Time</span>
-          </div>
-        </div>
+//       <div class="modal-body">
+//         <div class="stats-summary">
+//           <div class="stat-card">
+//             <span class="stat-icon">📚</span>
+//             <span class="stat-value">${quizzes[currentFolder].length}</span>
+//             <span class="stat-label">Total Questions</span>
+//           </div>
+//           <div class="stat-card">
+//             <span class="stat-icon">📊</span>
+//             <span class="stat-value" id="estimatedSections">0</span>
+//             <span class="stat-label">Sections</span>
+//           </div>
+//           <div class="stat-card">
+//             <span class="stat-icon">⏱️</span>
+//             <span class="stat-value" id="totalTimeEstimate">0 min</span>
+//             <span class="stat-label">Total Time</span>
+//           </div>
+//         </div>
 
-        <div class="settings-grid">
-          <div class="setting-item">
-            <label class="setting-label">
-              <span class="label-icon">📝</span>
-              Questions per section
-            </label>
-            <div class="setting-control">
-              <input type="range" id="pomoQPerSec" min="5" max="50" value="15" class="range-slider">
-              <span class="range-value" id="qPerSecValue">15</span>
-            </div>
-          </div>
+//         <div class="settings-grid">
+//           <div class="setting-item">
+//             <label class="setting-label">
+//               <span class="label-icon">📝</span>
+//               Questions per section
+//             </label>
+//             <div class="setting-control">
+//               <input type="range" id="pomoQPerSec" min="5" max="50" value="15" class="range-slider">
+//               <span class="range-value" id="qPerSecValue">15</span>
+//             </div>
+//           </div>
 
-          <div class="setting-item">
-            <label class="setting-label">
-              <span class="label-icon">🎯</span>
-              Study time (minutes)
-            </label>
-            <div class="setting-control">
-              <input type="range" id="pomoStudyMin" min="5" max="60" value="25" class="range-slider">
-              <span class="range-value" id="studyMinValue">25</span>
-            </div>
-          </div>
+//           <div class="setting-item">
+//             <label class="setting-label">
+//               <span class="label-icon">🎯</span>
+//               Study time (minutes)
+//             </label>
+//             <div class="setting-control">
+//               <input type="range" id="pomoStudyMin" min="5" max="60" value="25" class="range-slider">
+//               <span class="range-value" id="studyMinValue">25</span>
+//             </div>
+//           </div>
 
-          <div class="setting-item">
-            <label class="setting-label">
-              <span class="label-icon">✏️</span>
-              Quiz time (minutes)
-            </label>
-            <div class="setting-control">
-              <input type="range" id="pomoQuizMin" min="5" max="60" value="20" class="range-slider">
-              <span class="range-value" id="quizMinValue">20</span>
-            </div>
-          </div>
+//           <div class="setting-item">
+//             <label class="setting-label">
+//               <span class="label-icon">✏️</span>
+//               Quiz time (minutes)
+//             </label>
+//             <div class="setting-control">
+//               <input type="range" id="pomoQuizMin" min="5" max="60" value="20" class="range-slider">
+//               <span class="range-value" id="quizMinValue">20</span>
+//             </div>
+//           </div>
 
-          <div class="setting-item">
-            <label class="setting-label">
-              <span class="label-icon">☕</span>
-              Break time (minutes)
-            </label>
-            <div class="setting-control">
-              <input type="range" id="pomoBreakMin" min="1" max="15" value="5" class="range-slider">
-              <span class="range-value" id="breakMinValue">5</span>
-            </div>
-          </div>
-        </div>
+//           <div class="setting-item">
+//             <label class="setting-label">
+//               <span class="label-icon">☕</span>
+//               Break time (minutes)
+//             </label>
+//             <div class="setting-control">
+//               <input type="range" id="pomoBreakMin" min="1" max="15" value="5" class="range-slider">
+//               <span class="range-value" id="breakMinValue">5</span>
+//             </div>
+//           </div>
+//         </div>
 
-        <div class="advanced-settings">
-          <label class="checkbox-label">
-            <input type="checkbox" id="autoAdvance" checked>
-            <span class="checkmark"></span>
-            Auto-advance to next section
-          </label>
-          <label class="checkbox-label">
-            <input type="checkbox" id="showProgress" checked>
-            <span class="checkmark"></span>
-            Show progress bar
-          </label>
-        </div>
-      </div>
+//         <div class="advanced-settings">
+//           <label class="checkbox-label">
+//             <input type="checkbox" id="autoAdvance" checked>
+//             <span class="checkmark"></span>
+//             Auto-advance to next section
+//           </label>
+//           <label class="checkbox-label">
+//             <input type="checkbox" id="showProgress" checked>
+//             <span class="checkmark"></span>
+//             Show progress bar
+//           </label>
+//         </div>
+//       </div>
 
-      <div class="modal-footer">
-        <button class="modern-btn primary-btn" onclick="startPomodoroFlow()">
-          <span class="btn-icon">🚀</span>
-          Start Learning Flow
-        </button>
-        <button class="modern-btn secondary-btn" onclick="document.querySelector('.pomodoro-modal')?.remove()">
-          Cancel
-        </button>
-      </div>
-    </div>
-  `;
+//       <div class="modal-footer">
+//         <button class="modern-btn primary-btn" onclick="startPomodoroFlow()">
+//           <span class="btn-icon">🚀</span>
+//           Start Learning Flow
+//         </button>
+//         <button class="modern-btn secondary-btn" onclick="document.querySelector('.pomodoro-modal')?.remove()">
+//           Cancel
+//         </button>
+//       </div>
+//     </div>
+//   `;
   
-  document.body.appendChild(modal);
+//   document.body.appendChild(modal);
   
-  // Initialize range sliders
-  initializeRangeSliders();
+//   // Initialize range sliders
+//   initializeRangeSliders();
   
-  // Update estimates
-  updatePomodoroEstimates();
-}
+//   // Update estimates
+//   updatePomodoroEstimates();
+// }
 
 function initializeRangeSliders() {
   const sliders = [
@@ -163,65 +163,65 @@ function initializeRangeSliders() {
   });
 }
 
-function updatePomodoroEstimates() {
-  const qPerSec = parseInt(document.getElementById('pomoQPerSec')?.value || 15);
-  const totalQuestions = quizzes[currentFolder]?.length || 0;
-  const sections = Math.ceil(totalQuestions / qPerSec);
+// function updatePomodoroEstimates() {
+//   const qPerSec = parseInt(document.getElementById('pomoQPerSec')?.value || 15);
+//   const totalQuestions = quizzes[currentFolder]?.length || 0;
+//   const sections = Math.ceil(totalQuestions / qPerSec);
   
-  const studyMin = parseInt(document.getElementById('pomoStudyMin')?.value || 25);
-  const quizMin = parseInt(document.getElementById('pomoQuizMin')?.value || 20);
-  const breakMin = parseInt(document.getElementById('pomoBreakMin')?.value || 5);
+//   const studyMin = parseInt(document.getElementById('pomoStudyMin')?.value || 25);
+//   const quizMin = parseInt(document.getElementById('pomoQuizMin')?.value || 20);
+//   const breakMin = parseInt(document.getElementById('pomoBreakMin')?.value || 5);
   
-  const totalTime = sections * (studyMin + quizMin + breakMin);
+//   const totalTime = sections * (studyMin + quizMin + breakMin);
   
-  const sectionsEl = document.getElementById('estimatedSections');
-  const timeEl = document.getElementById('totalTimeEstimate');
+//   const sectionsEl = document.getElementById('estimatedSections');
+//   const timeEl = document.getElementById('totalTimeEstimate');
   
-  if (sectionsEl) sectionsEl.textContent = sections;
-  if (timeEl) timeEl.textContent = `${totalTime} min`;
-}
+//   if (sectionsEl) sectionsEl.textContent = sections;
+//   if (timeEl) timeEl.textContent = `${totalTime} min`;
+// }
 
 // ────────────────────────────────────────────────
 // 2. Start Full Flow with Modern UI
 // ────────────────────────────────────────────────
-function startPomodoroFlow() {
-  const modal = document.querySelector('.pomodoro-modal');
-  if (!modal) return;
+// function startPomodoroFlow() {
+//   const modal = document.querySelector('.pomodoro-modal');
+//   if (!modal) return;
 
-  // Get settings
-  pomodoroSettings.questionsPerSection = Math.max(5, parseInt(document.getElementById('pomoQPerSec')?.value) || 15);
-  pomodoroSettings.studyTimeMinutes = Math.max(5, parseInt(document.getElementById('pomoStudyMin')?.value) || 25);
-  pomodoroSettings.quizTimeMinutes = Math.max(5, parseInt(document.getElementById('pomoQuizMin')?.value) || 20);
-  pomodoroSettings.breakTimeMinutes = Math.max(1, parseInt(document.getElementById('pomoBreakMin')?.value) || 5);
-  pomodoroSettings.autoAdvance = document.getElementById('autoAdvance')?.checked || true;
-  pomodoroSettings.showProgressBar = document.getElementById('showProgress')?.checked || true;
+//   // Get settings
+//   pomodoroSettings.questionsPerSection = Math.max(5, parseInt(document.getElementById('pomoQPerSec')?.value) || 15);
+//   pomodoroSettings.studyTimeMinutes = Math.max(5, parseInt(document.getElementById('pomoStudyMin')?.value) || 25);
+//   pomodoroSettings.quizTimeMinutes = Math.max(5, parseInt(document.getElementById('pomoQuizMin')?.value) || 20);
+//   pomodoroSettings.breakTimeMinutes = Math.max(1, parseInt(document.getElementById('pomoBreakMin')?.value) || 5);
+//   pomodoroSettings.autoAdvance = document.getElementById('autoAdvance')?.checked || true;
+//   pomodoroSettings.showProgressBar = document.getElementById('showProgress')?.checked || true;
 
-  modal.remove();
+//   modal.remove();
 
-  // Split questions into sections
-  const allQuestions = quizzes[currentFolder];
-  pomodoroState.sections = [];
-  for (let i = 0; i < allQuestions.length; i += pomodoroSettings.questionsPerSection) {
-    pomodoroState.sections.push(allQuestions.slice(i, i + pomodoroSettings.questionsPerSection));
-  }
+//   // Split questions into sections
+//   const allQuestions = quizzes[currentFolder];
+//   pomodoroState.sections = [];
+//   for (let i = 0; i < allQuestions.length; i += pomodoroSettings.questionsPerSection) {
+//     pomodoroState.sections.push(allQuestions.slice(i, i + pomodoroSettings.questionsPerSection));
+//   }
 
-  pomodoroState.totalSections = pomodoroState.sections.length;
-  pomodoroState.currentSection = 0;
-  pomodoroState.active = true;
-  pomodoroState.isPaused = false;
-  pomodoroState.quizResults = [];
+//   pomodoroState.totalSections = pomodoroState.sections.length;
+//   pomodoroState.currentSection = 0;
+//   pomodoroState.active = true;
+//   pomodoroState.isPaused = false;
+//   pomodoroState.quizResults = [];
 
-  // Hide main containers
-  document.querySelector('.container')?.classList.add('hidden');
-  document.getElementById('analysisContainer')?.classList.add('hidden');
-  document.getElementById('quizOptions')?.classList.add('hidden');
+//   // Hide main containers
+//   document.querySelector('.container')?.classList.add('hidden');
+//   document.getElementById('analysisContainer')?.classList.add('hidden');
+//   document.getElementById('quizOptions')?.classList.add('hidden');
 
-  // Setup Pomodoro Interface
-  setupPomodoroInterface();
+//   // Setup Pomodoro Interface
+//   setupPomodoroInterface();
   
-  // Start with study phase
-  enterStudyPhase();
-}
+//   // Start with study phase
+//   enterStudyPhase();
+// }
 
 function setupPomodoroInterface() {
   // Create main pomodoro container
@@ -1077,4 +1077,406 @@ function togglePomodoroPause() {
   } else {
     document.getElementById('pauseOverlay')?.remove();
   }
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+// pomodoro.js mein ye changes/additions karein
+
+// Pomodoro settings mein range add karein
+let pomodoroSettings = {
+  questionsPerSection: 15,
+  studyTimeMinutes: 25,
+  quizTimeMinutes: 20,
+  breakTimeMinutes: 5,
+  autoAdvance: true,
+  showProgressBar: true,
+  // New range properties
+  startIndex: 1,
+  endIndex: null
+};
+
+// startPomodoroSetup function ko modify karein
+// 1. startPomodoroSetup function - POORA REPLACE KAREN
+function startPomodoroSetup() {
+  if (!currentFolder || !quizzes[currentFolder]?.length) {
+    alert("Select a folder with questions first!");
+    return;
+  }
+
+  // Close menu if open
+  if (document.getElementById('mobile-menu')?.classList.contains('show')) {
+    toggleMenu();
+  }
+
+  const modal = document.createElement('div');
+  modal.className = 'pomodoro-modal modern-modal';
+  modal.innerHTML = `
+    <div class="pomodoro-dialog modern-dialog">
+      <div class="modal-header">
+        <h3>🚀 Pomodoro Flow</h3>
+        <p class="modal-subtitle">Continuous Learning with Smart Breaks</p>
+      </div>
+      
+      <div class="modal-body">
+        <div class="stats-summary">
+          <div class="stat-card">
+            <span class="stat-icon">📚</span>
+            <span class="stat-value">${quizzes[currentFolder].length}</span>
+            <span class="stat-label">Total Questions</span>
+          </div>
+          <div class="stat-card">
+            <span class="stat-icon">📊</span>
+            <span class="stat-value" id="estimatedSections">0</span>
+            <span class="stat-label">Sections</span>
+          </div>
+          <div class="stat-card">
+            <span class="stat-icon">⏱️</span>
+            <span class="stat-value" id="totalTimeEstimate">0 min</span>
+            <span class="stat-label">Total Time</span>
+          </div>
+        </div>
+
+        <!-- NEW: Range Selection Section -->
+        <div class="settings-grid" style="margin-bottom: 15px;">
+          <div class="setting-item" style="grid-column: span 2;">
+            <label class="setting-label">
+              <span class="label-icon">🎯</span>
+              Question Range
+            </label>
+            <div style="display: flex; gap: 15px; align-items: center;">
+              <div style="flex: 1;">
+                <label style="display: block; font-size: 12px; color: #95a5a6;">From:</label>
+                <input type="number" id="pomoStartIndex" min="1" max="${quizzes[currentFolder].length}" value="1" 
+                  style="width: 100%; padding: 8px; background: rgba(255,255,255,0.1); border: 1px solid rgba(255,255,255,0.2); border-radius: 6px; color: white;">
+              </div>
+              <div style="flex: 1;">
+                <label style="display: block; font-size: 12px; color: #95a5a6;">To:</label>
+                <input type="number" id="pomoEndIndex" min="1" max="${quizzes[currentFolder].length}" value="${quizzes[currentFolder].length}" 
+                  style="width: 100%; padding: 8px; background: rgba(255,255,255,0.1); border: 1px solid rgba(255,255,255,0.2); border-radius: 6px; color: white;">
+              </div>
+            </div>
+            <div style="font-size: 12px; color: #95a5a6; margin-top: 8px;">
+              Selected: <span id="selectedQuestionsCount">${quizzes[currentFolder].length}</span> questions
+            </div>
+          </div>
+        </div>
+
+        <div class="settings-grid">
+          <div class="setting-item">
+            <label class="setting-label">
+              <span class="label-icon">📝</span>
+              Questions per section
+            </label>
+            <div class="setting-control">
+              <input type="range" id="pomoQPerSec" min="5" max="50" value="15" class="range-slider">
+              <span class="range-value" id="qPerSecValue">15</span>
+            </div>
+          </div>
+
+          <div class="setting-item">
+            <label class="setting-label">
+              <span class="label-icon">🎯</span>
+              Study time (minutes)
+            </label>
+            <div class="setting-control">
+              <input type="range" id="pomoStudyMin" min="5" max="60" value="25" class="range-slider">
+              <span class="range-value" id="studyMinValue">25</span>
+            </div>
+          </div>
+
+          <div class="setting-item">
+            <label class="setting-label">
+              <span class="label-icon">✏️</span>
+              Quiz time (minutes)
+            </label>
+            <div class="setting-control">
+              <input type="range" id="pomoQuizMin" min="5" max="60" value="20" class="range-slider">
+              <span class="range-value" id="quizMinValue">20</span>
+            </div>
+          </div>
+
+          <div class="setting-item">
+            <label class="setting-label">
+              <span class="label-icon">☕</span>
+              Break time (minutes)
+            </label>
+            <div class="setting-control">
+              <input type="range" id="pomoBreakMin" min="1" max="15" value="5" class="range-slider">
+              <span class="range-value" id="breakMinValue">5</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="advanced-settings">
+          <label class="checkbox-label">
+            <input type="checkbox" id="autoAdvance" checked>
+            <span class="checkmark"></span>
+            Auto-advance to next section
+          </label>
+          <label class="checkbox-label">
+            <input type="checkbox" id="showProgress" checked>
+            <span class="checkmark"></span>
+            Show progress bar
+          </label>
+        </div>
+      </div>
+
+      <div class="modal-footer">
+        <button class="modern-btn primary-btn" onclick="startPomodoroFlow()">
+          <span class="btn-icon">🚀</span>
+          Start Learning Flow
+        </button>
+        <button class="modern-btn secondary-btn" onclick="document.querySelector('.pomodoro-modal')?.remove()">
+          Cancel
+        </button>
+      </div>
+    </div>
+  `;
+  
+  document.body.appendChild(modal);
+  
+  // Initialize range sliders
+  initializeRangeSliders();
+  
+  // NEW: Add event listeners for range inputs
+ // Yeh code startPomodoroSetup() function ke end mein hai, usko replace karein:
+
+// Add event listeners for range inputs - FIXED VERSION
+// startPomodoroSetup() function ke andar yeh code add karein (range inputs ke liye)
+
+const startInput = document.getElementById('pomoStartIndex');
+const endInput = document.getElementById('pomoEndIndex');
+const totalQuestions = quizzes[currentFolder].length;
+
+// Remove any existing listeners (important!)
+const newStartInput = startInput.cloneNode(true);
+const newEndInput = endInput.cloneNode(true);
+startInput.parentNode.replaceChild(newStartInput, startInput);
+endInput.parentNode.replaceChild(newEndInput, endInput);
+
+// Use the new references
+const startField = document.getElementById('pomoStartIndex');
+const endField = document.getElementById('pomoEndIndex');
+
+// Store last valid values
+let lastValidStart = 1;
+let lastValidEnd = totalQuestions;
+
+// Allow free typing - ONLY validate on blur (when focus leaves)
+startField.addEventListener('blur', function() {
+    let value = this.value.trim();
+    
+    // If empty, restore last valid
+    if (value === '') {
+        this.value = lastValidStart;
+        return;
+    }
+    
+    // Convert to number
+    let numValue = Number(value);
+    
+    // If not a valid number, restore last valid
+    if (isNaN(numValue) || numValue < 1) {
+        this.value = lastValidStart;
+        return;
+    }
+    
+    // Get current end value
+    let endVal = parseInt(endField.value) || totalQuestions;
+    
+    // Ensure start is not greater than end
+    if (numValue > endVal) {
+        numValue = endVal;
+    }
+    
+    // Ensure not greater than total
+    if (numValue > totalQuestions) {
+        numValue = totalQuestions;
+    }
+    
+    // Update field and last valid
+    this.value = numValue;
+    lastValidStart = numValue;
+    
+    // Update counts
+    updateSelectedCount();
+});
+
+endField.addEventListener('blur', function() {
+    let value = this.value.trim();
+    
+    // If empty, restore last valid
+    if (value === '') {
+        this.value = lastValidEnd;
+        return;
+    }
+    
+    // Convert to number
+    let numValue = Number(value);
+    
+    // If not a valid number, restore last valid
+    if (isNaN(numValue) || numValue < 1) {
+        this.value = lastValidEnd;
+        return;
+    }
+    
+    // Get current start value
+    let startVal = parseInt(startField.value) || 1;
+    
+    // Ensure end is not less than start
+    if (numValue < startVal) {
+        numValue = startVal;
+    }
+    
+    // Ensure not greater than total
+    if (numValue > totalQuestions) {
+        numValue = totalQuestions;
+    }
+    
+    // Update field and last valid
+    this.value = numValue;
+    lastValidEnd = numValue;
+    
+    // Update counts
+    updateSelectedCount();
+});
+
+// Optional: Update count when typing (but don't validate)
+startField.addEventListener('input', function() {
+    // Just update the selected count display based on current values
+    let start = parseInt(this.value) || 1;
+    let end = parseInt(endField.value) || totalQuestions;
+    
+    // For display only - don't modify the input value
+    if (!isNaN(start) && !isNaN(end) && start <= end) {
+        document.getElementById('selectedQuestionsCount').textContent = (end - start + 1);
+    }
+});
+
+endField.addEventListener('input', function() {
+    // Just update the selected count display based on current values
+    let start = parseInt(startField.value) || 1;
+    let end = parseInt(this.value) || totalQuestions;
+    
+    // For display only - don't modify the input value
+    if (!isNaN(start) && !isNaN(end) && start <= end) {
+        document.getElementById('selectedQuestionsCount').textContent = (end - start + 1);
+    }
+});
+
+// Helper function for final validation
+function updateSelectedCount() {
+    let start = parseInt(startField.value) || 1;
+    let end = parseInt(endField.value) || totalQuestions;
+    
+    // Ensure valid range for display
+    if (start < 1) start = 1;
+    if (end > totalQuestions) end = totalQuestions;
+    if (start > end) start = end;
+    
+    const count = end - start + 1;
+    document.getElementById('selectedQuestionsCount').textContent = count;
+    
+    // Update estimates
+    updatePomodoroEstimates();
+}
+  
+  // Update estimates
+  updatePomodoroEstimates();
+}
+
+// updatePomodoroEstimates function ko modify karein
+
+// 2. updatePomodoroEstimates function - POORA REPLACE KAREN
+function updatePomodoroEstimates() {
+  const startIndex = parseInt(document.getElementById('pomoStartIndex')?.value) || 1;
+  const endIndex = parseInt(document.getElementById('pomoEndIndex')?.value) || quizzes[currentFolder]?.length;
+  const selectedQuestions = endIndex - startIndex + 1;
+  
+  const qPerSec = parseInt(document.getElementById('pomoQPerSec')?.value || 15);
+  const sections = Math.ceil(selectedQuestions / qPerSec);
+  
+  const studyMin = parseInt(document.getElementById('pomoStudyMin')?.value || 25);
+  const quizMin = parseInt(document.getElementById('pomoQuizMin')?.value || 20);
+  const breakMin = parseInt(document.getElementById('pomoBreakMin')?.value || 5);
+  
+  const totalTime = sections * (studyMin + quizMin + breakMin);
+  
+  const sectionsEl = document.getElementById('estimatedSections');
+  const timeEl = document.getElementById('totalTimeEstimate');
+  
+  if (sectionsEl) sectionsEl.textContent = sections;
+  if (timeEl) timeEl.textContent = `${totalTime} min`;
+}
+// startPomodoroFlow function ko modify karein
+// 3. startPomodoroFlow function - POORA REPLACE KAREN
+function startPomodoroFlow() {
+  const modal = document.querySelector('.pomodoro-modal');
+  if (!modal) return;
+
+  // NEW: Get range values
+  const startIndex = parseInt(document.getElementById('pomoStartIndex')?.value) - 1; // Convert to 0-based
+  const endIndex = parseInt(document.getElementById('pomoEndIndex')?.value); // Keep as 1-based for slice
+  
+  // Get settings
+  pomodoroSettings.questionsPerSection = Math.max(5, parseInt(document.getElementById('pomoQPerSec')?.value) || 15);
+  pomodoroSettings.studyTimeMinutes = Math.max(5, parseInt(document.getElementById('pomoStudyMin')?.value) || 25);
+  pomodoroSettings.quizTimeMinutes = Math.max(5, parseInt(document.getElementById('pomoQuizMin')?.value) || 20);
+  pomodoroSettings.breakTimeMinutes = Math.max(1, parseInt(document.getElementById('pomoBreakMin')?.value) || 5);
+  pomodoroSettings.autoAdvance = document.getElementById('autoAdvance')?.checked || true;
+  pomodoroSettings.showProgressBar = document.getElementById('showProgress')?.checked || true;
+  
+  // NEW: Save range settings
+  pomodoroSettings.startIndex = startIndex + 1;
+  pomodoroSettings.endIndex = endIndex;
+
+  modal.remove();
+
+  // NEW: Get selected questions based on range
+  const allQuestions = quizzes[currentFolder];
+  const selectedQuestions = allQuestions.slice(startIndex, endIndex);
+  
+  if (selectedQuestions.length === 0) {
+    alert("No questions selected in the specified range!");
+    return;
+  }
+
+  // Split questions into sections
+  pomodoroState.sections = [];
+  for (let i = 0; i < selectedQuestions.length; i += pomodoroSettings.questionsPerSection) {
+    pomodoroState.sections.push(selectedQuestions.slice(i, i + pomodoroSettings.questionsPerSection));
+  }
+
+  pomodoroState.totalSections = pomodoroState.sections.length;
+  pomodoroState.currentSection = 0;
+  pomodoroState.active = true;
+  pomodoroState.isPaused = false;
+  pomodoroState.quizResults = [];
+
+  // Hide main containers
+  document.querySelector('.container')?.classList.add('hidden');
+  document.getElementById('analysisContainer')?.classList.add('hidden');
+  document.getElementById('quizOptions')?.classList.add('hidden');
+
+  // Setup Pomodoro Interface
+  setupPomodoroInterface();
+  
+  // Start with study phase
+  enterStudyPhase();
 }
