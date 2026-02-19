@@ -1593,22 +1593,27 @@ function endRapidRoundAndCleanup() {
     console.log("Rapid Round ended and cleaned up.");
 }
 function goHome() {
-      markedDifficultQuestions = [];
+  markedDifficultQuestions = [];
 
+  // Check if Pomodoro is active and clean it up
   if (pomodoroState.active) {
     pomodoroState.active = false;
     clearPomodoroTimer();
     removePomodoroUI();
     removeExtraControls();
   }
+  
   // Clear any active mixed quiz timer
   if (mixedQuizTimer) {
     clearInterval(mixedQuizTimer);
     mixedQuizTimer = null;
   }
+  
+  // Clear Rapid Round if active
   if (typeof rapidRoundActive !== 'undefined' && rapidRoundActive) {
-        endRapidRoundAndCleanup();
-    }
+    endRapidRoundAndCleanup();
+  }
+  
   // Reset mixed quiz state
   mixedQuizActive = false;
   mixedQuizCurrentQuestionIndex = 0;
@@ -1616,49 +1621,53 @@ function goHome() {
   mixedQuizIncorrectQuestions = [];
   mixedQuizTimeLeft = 0;
 
-  // Restore original container content
+  // Remove any Pomodoro containers if they exist
+  document.getElementById('pomodoroContainer')?.remove();
+  document.getElementById('pomodoroTimerDisplay')?.remove();
+  document.getElementById('pomodoroControls')?.remove();
+  document.getElementById('pomodoroProgressBar')?.remove();
+  document.getElementById('pauseOverlay')?.remove();
+
+  // CRITICAL FIX: First hide all other containers
+  document.getElementById("flashcardContainer")?.classList.add("hidden");
+  document.getElementById("analysisContainer")?.classList.add("hidden");
+  document.getElementById("quizContainer")?.classList.add("hidden");
+  
+  // CRITICAL FIX: Show the main container
   const container = document.querySelector('.container');
   if (container) {
-    container.innerHTML = `
-      <h1 id="quiz-title">Select a Quiz</h1>
-      <div id="quizRangeContainer">
-        <div id="quizRange">
-          <p>Total Questions: <span id="totalQuestions">0</span></p>
-          <label>Start Index: <input type="number" id="startIndex" min="1" value="1"></label>
-          <label>End Index: <input type="number" id="endIndex" min="1" value="1"></label>
-        </div>
-      </div>
-      <button id="showDifficultBtn" class="quiz-btn" onclick="showDifficultQuestions()">Show Difficult Questions</button>
-      <div id="quizOptions" class="hidden">
-        <button class="quiz-btn" onclick="startQuiz('complete')">Start Quiz</button>
-        <button class="quiz-btn" onclick="startQuiz('difficult')">Difficult Part</button>
-      </div>
-      <div id="quizContainer" class="container hidden">
-        <div id="quiz-progress">
-          <span id="current-question">1</span> / <span id="total-questions">0</span>
-        </div>
-        <div id="quiz-timer">
-          Time Left: <span id="time-display">00:00</span>
-        </div>
-        <h2 id="question-text">Question will appear here</h2>
-        <div id="options"></div>
-      </div>
-    `;
+    container.classList.remove("hidden");
+  } else {
+    console.error("Main container not found!");
+    return;
   }
 
-  // Hide other containers
-  document.getElementById("flashcardContainer").classList.add("hidden");
-  document.getElementById("analysisContainer").classList.add("hidden");
-
-  // If a folder is selected, update and show quiz options
-  if (currentFolder && quizzes[currentFolder]) {
-    const totalQuestions = quizzes[currentFolder].length;
-    document.getElementById("totalQuestions").textContent = totalQuestions;
-    document.getElementById("startIndex").max = totalQuestions;
-    document.getElementById("endIndex").max = totalQuestions;
-    document.getElementById("endIndex").value = totalQuestions;
-    document.getElementById("quizOptions").classList.remove("hidden");
-  }
+  // Restore original container content
+  container.innerHTML = `
+    <h1 id="quiz-title">Select a Quiz</h1>
+    <div id="quizRangeContainer">
+      <div id="quizRange">
+        <p>Total Questions: <span id="totalQuestions">0</span></p>
+        <label>Start Index: <input type="number" id="startIndex" min="1" value="1"></label>
+        <label>End Index: <input type="number" id="endIndex" min="1" value="1"></label>
+      </div>
+    </div>
+    <button id="showDifficultBtn" class="quiz-btn" onclick="showDifficultQuestions()">Show Difficult Questions</button>
+    <div id="quizOptions" class="hidden">
+      <button class="quiz-btn" onclick="startQuiz('complete')">Start Quiz</button>
+      <button class="quiz-btn" onclick="startQuiz('difficult')">Difficult Part</button>
+    </div>
+    <div id="quizContainer" class="container hidden">
+      <div id="quiz-progress">
+        <span id="current-question">1</span> / <span id="total-questions">0</span>
+      </div>
+      <div id="quiz-timer">
+        Time Left: <span id="time-display">00:00</span>
+      </div>
+      <h2 id="question-text">Question will appear here</h2>
+      <div id="options"></div>
+    </div>
+  `;
 
   // Reset quiz state
   currentQuiz = [];
@@ -1669,17 +1678,63 @@ function goHome() {
   questionTimes = [];
   totalQuizTime = 0;
 
-  // Update folder list if needed
+  // CRITICAL FIX: Update folder select dropdown value
+  const folderSelect = document.getElementById("folderSelect");
+  if (folderSelect) {
+    folderSelect.value = currentFolder || "";
+  }
+
+  // CRITICAL FIX: If a folder is selected, update range and show quiz options
+  if (currentFolder && quizzes[currentFolder]) {
+    const totalQuestions = quizzes[currentFolder].length;
+    
+    // Update total questions display
+    const totalQuestionsSpan = document.getElementById("totalQuestions");
+    if (totalQuestionsSpan) {
+      totalQuestionsSpan.textContent = totalQuestions;
+    }
+    
+    // Update start index input
+    const startIndex = document.getElementById("startIndex");
+    if (startIndex) {
+      startIndex.max = totalQuestions;
+      startIndex.value = 1;
+    }
+    
+    // Update end index input
+    const endIndex = document.getElementById("endIndex");
+    if (endIndex) {
+      endIndex.max = totalQuestions;
+      endIndex.value = totalQuestions;
+    }
+    
+    // Show quiz options
+    const quizOptions = document.getElementById("quizOptions");
+    if (quizOptions) {
+      quizOptions.classList.remove("hidden");
+    }
+  } else {
+    // Hide quiz options if no folder selected
+    const quizOptions = document.getElementById("quizOptions");
+    if (quizOptions) {
+      quizOptions.classList.add("hidden");
+    }
+  }
+
+  // Update folder list to ensure it's current
   updateFolderList();
-
+  
+  // Update medal display
+  updateMedalDisplay();
+  
+  // Update frequent folders in footer
+  updateFrequentFoldersList();
+  
+  // Update footer goals
+  updateFooterGoals();
+  
+  console.log("Home button clicked - UI restored with folder:", currentFolder);
 }
-function forceGoHome() {
-    console.warn("forceGoHome() used — this should be avoided");
-    clearKnownTimers();
-    cleanupRapidRoundUI();
-    cleanupMixedQuizUI();
-}
-
 
 function stopFlashcardStudy() {
   if (currentFolder) {
@@ -3797,3 +3852,15 @@ function updateThemeDependentElements() {
 
 // Load theme on page start
 document.addEventListener('DOMContentLoaded', loadTheme);
+// script.js mein add karein - Helper function to remove any extra controls
+function removeExtraControls() {
+  // Remove any floating controls that might be present
+  document.querySelectorAll('.rapid-round-controls, .pomodoro-controls, .mixed-quiz-controls').forEach(el => {
+    el.remove();
+  });
+  
+  // Remove any timer displays
+  document.getElementById('rapidTimerDisplay')?.remove();
+  document.getElementById('pomodoroTimerDisplay')?.remove();
+  document.getElementById('mixedQuizTimer')?.remove();
+}
