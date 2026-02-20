@@ -347,7 +347,7 @@
 }
 
 .pomodoro-flashcard {
-  height: 300px;
+  height: 390px;
   cursor: pointer;
   position: relative;
   overflow: hidden;
@@ -1223,6 +1223,7 @@
     bottom: 20px;
     right: 10px;
     padding: 10px;
+    display: none;
   }
   
   .control-btn {
@@ -1388,4 +1389,5 @@ footer {
     right: 0;
     height: 200px; /* Adjust based on your footer height */
 }
+
 
