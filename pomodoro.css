@@ -73,6 +73,7 @@
 .settings-grid {
   display: flex;
   flex-direction: row;
+  flex-wrap: wrap;
   gap: 20px;
   justify-content: space-between;
 }
@@ -1341,7 +1342,7 @@
 /* Responsive Design */
 @media (max-width: 768px) {
   .modern-dialog {
-    width: 95%;
+    width: 80%;
     padding: 20px;
   }
   
@@ -1351,6 +1352,7 @@
   
   .stat-card {
     min-width: calc(50% - 15px);
+    padding: 0px;
   }
   
   .flashcards-grid {
@@ -1373,6 +1375,12 @@
     min-width: 120px;
     justify-content: center;
   }
+  .setting-item{
+    padding:0px;
+  }
+  .settings-grid{
+    gap:5px;
+  }
 }
 /* Simple Sticky Footer */
 body {
@@ -1389,5 +1397,6 @@ footer {
     right: 0;
     height: 200px; /* Adjust based on your footer height */
 }
+
 
 
