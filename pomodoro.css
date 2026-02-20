@@ -1241,6 +1241,12 @@
     font-size: 11px;
     padding: 5px 10px;
   }
+  .modern-btn{
+    padding: 8px 12px;
+  }
+  .stat-value{
+    font-size:.9em;
+  }
 }
 .home-btn {
   background: rgba(231, 76, 60, 0.3);
@@ -1397,6 +1403,7 @@ footer {
     right: 0;
     height: 200px; /* Adjust based on your footer height */
 }
+
 
 
 
