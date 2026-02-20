@@ -1342,7 +1342,6 @@
 /* Responsive Design */
 @media (max-width: 768px) {
   .modern-dialog {
-    width: 80%;
     padding: 20px;
   }
   
@@ -1377,6 +1376,7 @@
   }
   .setting-item{
     padding:0px;
+    width:100%;
   }
   .settings-grid{
     gap:5px;
@@ -1397,6 +1397,7 @@ footer {
     right: 0;
     height: 200px; /* Adjust based on your footer height */
 }
+
 
 
 
