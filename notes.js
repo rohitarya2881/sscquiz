@@ -52,7 +52,7 @@ function loadNotesData() {
             if (!notesData.categories) {
                 notesData.categories = ['Daily Goals', 'Completed Tasks', 'Learning Notes', 'Achievements', 'Reflections'];
             }
-            // Ensure all entries have category field
+            // Ensure all entries have required fields
             Object.keys(notesData.entries).forEach(date => {
                 if (!notesData.entries[date].category) {
                     notesData.entries[date].category = 'Daily Goals';
@@ -62,6 +62,9 @@ function loadNotesData() {
                 }
                 if (!notesData.entries[date].mood) {
                     notesData.entries[date].mood = 'neutral';
+                }
+                if (!notesData.entries[date].content) {
+                    notesData.entries[date].content = '';
                 }
             });
         } catch (e) {
@@ -87,12 +90,20 @@ function saveNotesData() {
     localStorage.setItem('quizNotes', JSON.stringify(notesData));
 }
 
-// Main function to show notes interface
+// Main function to show notes interface - FIXED
 function showNotes() {
+    console.log("showNotes function called"); // Debug log
+    
     // Hide other containers
-    document.getElementById("quizContainer")?.classList.add("hidden");
-    document.getElementById("flashcardContainer")?.classList.add("hidden");
-    document.getElementById("analysisContainer")?.classList.add("hidden");
+    const quizContainer = document.getElementById("quizContainer");
+    const flashcardContainer = document.getElementById("flashcardContainer");
+    const analysisContainer = document.getElementById("analysisContainer");
+    const quizSelection = document.getElementById("quizSelection");
+    
+    if (quizContainer) quizContainer.classList.add("hidden");
+    if (flashcardContainer) flashcardContainer.classList.add("hidden");
+    if (analysisContainer) analysisContainer.classList.add("hidden");
+    if (quizSelection) quizSelection.classList.remove("active");
     
     // Remove any existing notes container
     const existingNotes = document.getElementById('notesContainer');
@@ -266,6 +277,8 @@ function showNotes() {
             saveCurrentNote();
         }
     });
+    
+    console.log("Notes container created and appended"); // Debug log
 }
 
 // Render streak display
@@ -327,7 +340,7 @@ function addTodo() {
     const todo = input.value.trim();
     
     if (!todo) {
-        alert('Please enter a task description');
+        showNotification('Please enter a task description', 'warning');
         return;
     }
     
@@ -351,7 +364,6 @@ function addTodo() {
     updateTodoList();
     updateRecentNotes();
     
-    // Show feedback
     showNotification('Task added successfully!', 'success');
 }
 
@@ -365,7 +377,6 @@ function deleteTodo(index) {
         updateTodoList();
         updateRecentNotes();
         
-        // Show feedback
         showNotification('Task removed', 'info');
     }
 }
@@ -380,7 +391,7 @@ function updateTodoList() {
     }
 }
 
-// Set mood
+// Set mood - FIXED
 function setMood(mood) {
     const today = new Date().toISOString().split('T')[0];
     
@@ -400,11 +411,12 @@ function setMood(mood) {
     document.querySelectorAll('.mood-emoji').forEach(emoji => {
         emoji.classList.remove('selected');
     });
-    event.target.classList.add('selected');
+    
+    // Find and select the clicked emoji
+    const clickedEmoji = event.target;
+    clickedEmoji.classList.add('selected');
     
     saveNotesData();
-    
-    // Show feedback
     showNotification('Mood updated', 'success');
 }
 
@@ -443,8 +455,6 @@ function autoSaveNote() {
         }
         
         saveNotesData();
-        
-        // Show auto-save indicator
         showSaveIndicator();
     }
 }
@@ -455,19 +465,30 @@ function showSaveIndicator() {
     if (!indicator) {
         indicator = document.createElement('div');
         indicator.className = 'save-indicator';
-        document.querySelector('.editor-footer').appendChild(indicator);
+        const footer = document.querySelector('.editor-footer');
+        if (footer) {
+            footer.appendChild(indicator);
+        }
     }
     
-    indicator.textContent = '✓ Saved';
-    indicator.style.opacity = '1';
-    
-    setTimeout(() => {
-        indicator.style.opacity = '0';
-    }, 2000);
+    if (indicator) {
+        indicator.textContent = '✓ Saved';
+        indicator.style.opacity = '1';
+        
+        setTimeout(() => {
+            indicator.style.opacity = '0';
+        }, 2000);
+    }
 }
 
-// Show notification
+// Show notification - FIXED
 function showNotification(message, type = 'info') {
+    // Check if function already exists in global scope to avoid conflicts
+    if (typeof window.showToast === 'function') {
+        window.showToast(message, type);
+        return;
+    }
+    
     const notification = document.createElement('div');
     notification.className = `notes-notification ${type}`;
     notification.textContent = message;
@@ -476,11 +497,12 @@ function showNotification(message, type = 'info') {
         top: 20px;
         right: 20px;
         padding: 10px 20px;
-        background: ${type === 'success' ? '#2ecc71' : '#3498db'};
+        background: ${type === 'success' ? '#2ecc71' : type === 'warning' ? '#f39c12' : '#3498db'};
         color: white;
         border-radius: 5px;
         z-index: 1001;
         animation: slideIn 0.3s ease;
+        box-shadow: 0 4px 12px rgba(0,0,0,0.2);
     `;
     
     document.body.appendChild(notification);
@@ -495,16 +517,17 @@ function showNotification(message, type = 'info') {
 function saveCurrentNote() {
     autoSaveNote();
     
-    // Visual feedback on button
     const saveBtn = document.querySelector('.notes-save-btn');
-    const originalHTML = saveBtn.innerHTML;
-    saveBtn.innerHTML = '<span>✓</span> Saved!';
-    saveBtn.style.backgroundColor = '#27ae60';
-    
-    setTimeout(() => {
-        saveBtn.innerHTML = originalHTML;
-        saveBtn.style.backgroundColor = '';
-    }, 2000);
+    if (saveBtn) {
+        const originalHTML = saveBtn.innerHTML;
+        saveBtn.innerHTML = '<span>✓</span> Saved!';
+        saveBtn.style.backgroundColor = '#27ae60';
+        
+        setTimeout(() => {
+            saveBtn.innerHTML = originalHTML;
+            saveBtn.style.backgroundColor = '';
+        }, 2000);
+    }
     
     updateRecentNotes();
     renderNotesCalendar();
@@ -516,7 +539,6 @@ function clearTodayNote() {
     if (confirm('Clear today\'s entire entry? This cannot be undone.')) {
         const today = new Date().toISOString().split('T')[0];
         
-        // Reset to default but keep the entry structure
         notesData.entries[today] = {
             content: '',
             category: 'Daily Goals',
@@ -528,15 +550,22 @@ function clearTodayNote() {
         saveNotesData();
         
         // Reload the editor
-        document.getElementById('noteContent').value = '';
-        document.getElementById('noteCategory').value = 'Daily Goals';
-        document.getElementById('todoList').innerHTML = renderTodoList([]);
-        document.getElementById('wordCount').textContent = 'Words: 0';
-        document.getElementById('textareaCategoryTitle').textContent = 'Daily Goals - Notes';
+        const noteContent = document.getElementById('noteContent');
+        const noteCategory = document.getElementById('noteCategory');
+        const todoList = document.getElementById('todoList');
+        const wordCount = document.getElementById('wordCount');
+        const categoryTitle = document.getElementById('textareaCategoryTitle');
+        
+        if (noteContent) noteContent.value = '';
+        if (noteCategory) noteCategory.value = 'Daily Goals';
+        if (todoList) todoList.innerHTML = renderTodoList([]);
+        if (wordCount) wordCount.textContent = 'Words: 0';
+        if (categoryTitle) categoryTitle.textContent = 'Daily Goals - Notes';
         
         // Update mood
         document.querySelectorAll('.mood-emoji').forEach(e => e.classList.remove('selected'));
-        document.querySelector('.mood-emoji[onclick="setMood(\'neutral\')"]').classList.add('selected');
+        const neutralEmoji = document.querySelector('.mood-emoji[onclick="setMood(\'neutral\')"]');
+        if (neutralEmoji) neutralEmoji.classList.add('selected');
         
         updateRecentNotes();
         renderNotesCalendar();
@@ -629,12 +658,19 @@ function loadNoteDate(date) {
     };
     
     // Update UI
-    document.getElementById('editorDateTitle').textContent = formatDate(date);
-    document.getElementById('noteContent').value = entry.content || '';
-    document.getElementById('noteCategory').value = entry.category || 'Daily Goals';
-    document.getElementById('todoList').innerHTML = renderTodoList(entry.completed || []);
-    document.getElementById('wordCount').textContent = `Words: ${countWords(entry.content || '')}`;
-    document.getElementById('textareaCategoryTitle').textContent = `${entry.category || 'Daily Goals'} - Notes`;
+    const editorDateTitle = document.getElementById('editorDateTitle');
+    const noteContent = document.getElementById('noteContent');
+    const noteCategory = document.getElementById('noteCategory');
+    const todoList = document.getElementById('todoList');
+    const wordCount = document.getElementById('wordCount');
+    const categoryTitle = document.getElementById('textareaCategoryTitle');
+    
+    if (editorDateTitle) editorDateTitle.textContent = formatDate(date);
+    if (noteContent) noteContent.value = entry.content || '';
+    if (noteCategory) noteCategory.value = entry.category || 'Daily Goals';
+    if (todoList) todoList.innerHTML = renderTodoList(entry.completed || []);
+    if (wordCount) wordCount.textContent = `Words: ${countWords(entry.content || '')}`;
+    if (categoryTitle) categoryTitle.textContent = `${entry.category || 'Daily Goals'} - Notes`;
     
     // Update mood
     document.querySelectorAll('.mood-emoji').forEach(emoji => {
@@ -716,18 +752,23 @@ function updateStreakCounter() {
 
 // Render calendar
 function renderNotesCalendar() {
+    const calendarElement = document.getElementById('notesCalendar');
+    if (!calendarElement) return;
+    
     const year = currentCalendarDate.getFullYear();
     const month = currentCalendarDate.getMonth();
     
     const firstDay = new Date(year, month, 1);
     const lastDay = new Date(year, month + 1, 0);
     
-    const startingDay = firstDay.getDay(); // 0 = Sunday
+    const startingDay = firstDay.getDay();
     const totalDays = lastDay.getDate();
     
     // Update month/year display
-    document.getElementById('currentMonthYear').textContent = 
-        firstDay.toLocaleString('default', { month: 'long', year: 'numeric' });
+    const monthDisplay = document.getElementById('currentMonthYear');
+    if (monthDisplay) {
+        monthDisplay.textContent = firstDay.toLocaleString('default', { month: 'long', year: 'numeric' });
+    }
     
     let calendarHTML = '<div class="calendar-weekdays">';
     const weekdays = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
@@ -742,8 +783,9 @@ function renderNotesCalendar() {
     }
     
     const today = new Date().toISOString().split('T')[0];
-    const selectedDate = document.getElementById('editorDateTitle')?.textContent 
-        ? new Date(document.getElementById('editorDateTitle').textContent).toISOString().split('T')[0]
+    const editorDateTitle = document.getElementById('editorDateTitle');
+    const selectedDate = editorDateTitle?.textContent 
+        ? new Date(editorDateTitle.textContent).toISOString().split('T')[0]
         : today;
     
     // Fill in the days
@@ -768,7 +810,7 @@ function renderNotesCalendar() {
     }
     
     calendarHTML += '</div>';
-    document.getElementById('notesCalendar').innerHTML = calendarHTML;
+    calendarElement.innerHTML = calendarHTML;
 }
 
 // Change month
@@ -779,8 +821,12 @@ function changeMonth(delta) {
 
 // Filter by category
 function filterByCategory(category) {
-    document.getElementById('noteCategory').value = category;
-    document.getElementById('textareaCategoryTitle').textContent = `${category} - Notes`;
+    const categorySelect = document.getElementById('noteCategory');
+    const categoryTitle = document.getElementById('textareaCategoryTitle');
+    
+    if (categorySelect) categorySelect.value = category;
+    if (categoryTitle) categoryTitle.textContent = `${category} - Notes`;
+    
     autoSaveNote();
     
     // Highlight matching recent notes
@@ -844,7 +890,7 @@ function importNotes() {
                 if (imported.entries && imported.categories) {
                     notesData = imported;
                     saveNotesData();
-                    showNotes(); // Reload the interface
+                    showNotes();
                     showNotification('Notes imported successfully!', 'success');
                 } else {
                     alert('Invalid notes file format');
@@ -866,100 +912,31 @@ function closeNotes() {
     if (notesContainer) {
         notesContainer.remove();
     }
-    // Show main container
-    document.querySelector('.container')?.classList.remove('hidden');
+    
+    // Show main container and quiz selection
+    const mainContainer = document.querySelector('.container');
+    const quizSelection = document.getElementById('quizSelection');
+    
+    if (mainContainer) mainContainer.classList.remove('hidden');
+    if (quizSelection) quizSelection.classList.add('active');
 }
 
-// Add necessary CSS animations
-const style = document.createElement('style');
-style.textContent = `
-    @keyframes slideIn {
-        from {
-            transform: translateX(100%);
-            opacity: 0;
-        }
-        to {
-            transform: translateX(0);
-            opacity: 1;
-        }
-    }
-    
-    @keyframes fadeOut {
-        to {
-            opacity: 0;
-        }
-    }
-    
-    .save-indicator {
-        position: fixed;
-        bottom: 20px;
-        right: 20px;
-        background-color: #2ecc71;
-        color: white;
-        padding: 10px 20px;
-        border-radius: 5px;
-        animation: slideIn 0.3s ease;
-        transition: opacity 0.3s ease;
-        z-index: 1000;
-    }
-    
-    .notes-notification {
-        position: fixed;
-        top: 20px;
-        right: 20px;
-        padding: 10px 20px;
-        border-radius: 5px;
-        color: white;
-        z-index: 1001;
-        animation: slideIn 0.3s ease;
-    }
-    
-    .notes-tips-card {
-        background-color: #f8f9fa;
-        border-radius: 12px;
-        padding: 20px;
-        margin-top: 20px;
-        border: 1px solid #eaeaea;
-    }
-    
-    .dark-theme .notes-tips-card {
-        background: linear-gradient(135deg, #1A2029 0%, #1E2733 100%);
-        border-color: #2A3440;
-    }
-    
-    .notes-tips-card h4 {
-        margin-top: 0;
-        margin-bottom: 15px;
-        color: #4a6fa5;
-    }
-    
-    .dark-theme .notes-tips-card h4 {
-        color: #3498db;
-    }
-    
-    .tips-list {
-        margin: 0;
-        padding-left: 20px;
-        color: #666;
-    }
-    
-    .dark-theme .tips-list {
-        color: #aaa;
-    }
-    
-    .tips-list li {
-        margin-bottom: 8px;
-    }
-    
-    .mood-indicator {
-        margin-left: 5px;
-        font-size: 12px;
-    }
-`;
-
-document.head.appendChild(style);
+// Make functions globally available
+window.showNotes = showNotes;
+window.exportNotes = exportNotes;
+window.importNotes = importNotes;
+window.closeNotes = closeNotes;
+window.addTodo = addTodo;
+window.deleteTodo = deleteTodo;
+window.setMood = setMood;
+window.saveCurrentNote = saveCurrentNote;
+window.clearTodayNote = clearTodayNote;
+window.loadNoteDate = loadNoteDate;
+window.changeMonth = changeMonth;
+window.filterByCategory = filterByCategory;
 
 // Initialize on page load
 document.addEventListener('DOMContentLoaded', function() {
+    console.log("DOM loaded, initializing notes...");
     loadNotesData();
 });
