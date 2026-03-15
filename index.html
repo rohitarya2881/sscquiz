@@ -23,6 +23,12 @@
 <link href="https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap" rel="stylesheet">
 <!-- index.html के head section में CSS add करें -->
 <link rel="stylesheet" href="mixed.css">
+    <link rel="stylesheet" href="bulkAddJson.css">
+        <link rel="stylesheet" href="notes.css">
+<script src="bulkAddJson.js" defer></script>
+<script src="notes.js" defer></script>
+
+
 
 <!-- index.html के body के end में JS add करें -->
 <script src="mixed.js" defer></script>
@@ -74,7 +80,10 @@
 <!-- Inside the mobile-menu div, add this button -->
 <button class="button-quiz" onclick="showAddQuestionDialog()">Add Question</button>
                 <button class="button-quiz" onclick="showFlashcards()">Flashcards</button>
-
+<!-- Sidebar menu mein ye button add karo -->
+                    <button class="menu-item" onclick="showBulkAddJSON()">
+                        <i class="fas fa-code"></i> Bulk Add JSON
+                    </button>
         <button class="button-quiz" onclick="createFolder()">Create Folder</button>
           <button class="button-quiz" onclick="document.getElementById('jsonFileInputRestore').click()">Restore
             Data</button>
@@ -202,6 +211,7 @@
                     <li><button class="footer-link" onclick="showFlashcards()">Flashcards</button></li>
                     <li><button class="footer-link" onclick="setFolderGoals()">Set Folder  Goals</button></li>
                     <li><button class="footer-link" onclick="startPomodoroSetup()">Pomodoro Flow</button></li>
+<li><button class="footer-link" onclick="showNotes()">📝 Notes & Journal</button></li>
 
                 </ul>
             </div>
